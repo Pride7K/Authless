@@ -4,8 +4,9 @@ import { create, supported } from "@github/webauthn-json";
 import { generateChallenge, isLoggedIn } from "@/lib/auth";
 import { withSession } from "@/lib/session";
 import { useRouter } from "next/router";
+import { FormEvent, FormEventHandler } from "react";
 
-export default function Register({ challenge }) {
+export default function register({ challenge }) {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ export default function Register({ challenge }) {
     checkAvailability();
   }, []);
 
-  const handleRegister = async (event) => {
+  const handleRegister = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const userAvailable = await fetch("/api/usercheck", {
@@ -62,7 +63,7 @@ export default function Register({ challenge }) {
           displayName:email,
         },
         pubKeyCredParams: [{ alg: -7, type: "public-key" }],
-        timeout: 60000,
+        timeout: 120000,
         attestation: "direct",
         authenticatorSelection: {
           residentKey: "required",

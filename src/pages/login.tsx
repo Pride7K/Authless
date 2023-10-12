@@ -1,8 +1,9 @@
 import { generateChallenge, isLoggedIn } from "@/lib/auth";
 import { withSession } from "@/lib/session";
 import { supported, create, get } from "@github/webauthn-json";
-import { useEffect, useState } from "react";
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { NextApiRequest } from "next";
 
 export default function Login({ challenge }) {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function Login({ challenge }) {
     checkAvailability();
   }, []);
 
-  const handleLogin = async (event) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const credential = await get({
@@ -104,6 +105,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
       },
     };
   }
+
   const challenge = await generateChallenge();
   req.session.challenge = challenge;
   await req.session.save();

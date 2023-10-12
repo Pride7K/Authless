@@ -9,6 +9,10 @@ export default async function handler(req, res) {
     $or: [{ email: email }, { username: username }],
   });
 
+  console.log("ok")
+
+  console.log(userExists)
+
   if (userExists) {
     res.status(400).json({ message: "User already exists" });
   } else {

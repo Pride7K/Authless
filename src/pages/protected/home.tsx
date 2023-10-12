@@ -1,7 +1,7 @@
 import { isLoggedIn } from "@/lib/auth";
 import { withSession } from "@/lib/session";
 
-export default function ProtectedHome({ userID }) {
+export default function home({ userID }) {
   return (
     <div>
       <h1>Protected Home</h1>
@@ -21,6 +21,7 @@ export default function ProtectedHome({ userID }) {
 }
 
 export const getServerSideProps = withSession(async function ({ req, res }) {
+  console.log("teste")
   if (!isLoggedIn(req)) {
     return {
       redirect: {
