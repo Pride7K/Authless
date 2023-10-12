@@ -8,8 +8,6 @@ const handler: NextApiHandler = async (
 ) => {
   try {
     const userId = await login(request);
-    console.log("teste3")
-    console.log(userId)
     request.session.userId = userId;
     await request.session.save();
 

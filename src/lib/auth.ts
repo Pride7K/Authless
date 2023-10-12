@@ -50,7 +50,9 @@ export async function verifyCredentials(request:NextApiRequest) {
     throw new Error("Invalid Credentials");
   }
 
+
   let verification;
+
 
   verification = await verifyRegistrationResponse({
     response: credential,
@@ -58,6 +60,7 @@ export async function verifyCredentials(request:NextApiRequest) {
     requireUserVerification: true,
     ...HOST_SETTINGS,
   });
+
 
   if (!verification.verified) {
     throw new Error("Invalid Credentials - Registration verification failed.");
@@ -95,11 +98,15 @@ export async function login(request: NextApiRequest) {
   const credential = request.body.credential ?? "";
   const email = request.body.email ?? "";
   
-  
+  console.log(credential)
 
   if (credential?.id == null) {
     throw new Error("Invalid Credentials");
   }
+
+  console.log("login")
+
+  console.log("credential: ", credential)
 
   const cred = await Credentials.findOne({ externalId: credential.id });
   if (cred == null) {

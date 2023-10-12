@@ -6,6 +6,36 @@ import { withSession } from "@/lib/session";
 import { useRouter } from "next/router";
 import { FormEvent, FormEventHandler } from "react";
 
+function generateRandomId() {
+  // Crie um array de bytes (Uint8Array) para armazenar o ID
+  const idBytes = new Uint8Array(16);
+
+  // Preencha o array de bytes com valores aleatórios
+  crypto.getRandomValues(idBytes);
+
+  // Converta os bytes em uma representação hexadecimal
+  const idHex = Array.from(idBytes)
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+
+  // Retorne o ID como uma string hexadecimal
+  return idHex;
+}
+
+function stringToArrayBuffer(str: string) {
+  let encoder = new TextEncoder();
+  return encoder.encode(str).buffer;
+}
+
+function base64url_encode(buffer: ArrayBuffer): string {
+  return btoa(
+    Array.from(new Uint8Array(buffer), (b) => String.fromCharCode(b)).join("")
+  )
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
 export default function register({ challenge }) {
   const router = useRouter();
 
@@ -20,13 +50,11 @@ export default function register({ challenge }) {
       const available =
         await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
       setSupport(available && supported());
-      console.log(support);
-      console.log(available && supported());
     };
     checkAvailability();
   }, []);
 
-  const handleRegister = async (event:FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const userAvailable = await fetch("/api/usercheck", {
@@ -37,18 +65,21 @@ export default function register({ challenge }) {
       body: JSON.stringify({ email, username }),
     });
 
-    console.log("poggers");
-
     if (userAvailable.status !== 200) {
       const { message } = await userAvailable.json();
       setError(message);
       return;
     }
 
+    var newChallenger = stringToArrayBuffer(challenge);
 
-    console.log(challenge)
+    console.log(newChallenger);
 
-    const cred = create({
+    const userId = Array.from(window.crypto.getRandomValues(new Uint8Array(16)))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+
+    const cred = await create({
       publicKey: {
         challenge: challenge,
         rp: {
@@ -58,30 +89,43 @@ export default function register({ challenge }) {
         },
         user: {
           // You can choose any id you please, as long as it is unique
-          id: "1234",
+          id: base64url_encode(
+            Uint8Array.from("UZSL85T9AFC", (c) => c.charCodeAt(0))
+          ),
           name: username,
-          displayName:email,
+          displayName: email,
         },
-        pubKeyCredParams: [{ alg: -7, type: "public-key" }],
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" },
+          { type: "public-key", alg: -257 },
+        ],
         timeout: 120000,
         attestation: "direct",
         authenticatorSelection: {
+          authenticatorAttachment: "platform",
           residentKey: "required",
           userVerification: "required",
         },
       },
     });
 
+    console.log(cred.id);
+
     const res = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, username, cred }),
+      body: JSON.stringify({
+        email,
+        username,
+        cred: cred,
+        challenge,
+      }),
     });
 
     if (res.status === 200) {
-      router.push("/protected/ProtectedHome");
+      router.push("/protected/home");
     } else {
       const { message } = await res.json();
       setError(message);

@@ -5,6 +5,15 @@ import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { NextApiRequest } from "next";
 
+function base64url_encode(buffer: ArrayBuffer): string {
+  return btoa(
+    Array.from(new Uint8Array(buffer), (b) => String.fromCharCode(b)).join("")
+  )
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
 export default function Login({ challenge }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -21,21 +30,54 @@ export default function Login({ challenge }) {
     checkAvailability();
   }, []);
 
+  console.log(challenge);
+
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const credential = await get({
+    console.log(challenge);
+
+    const cred = await create({
       publicKey: {
-        challenge,
-        timeout: 60000,
-        userVerification: "required",
-        rpId: "localhost",
+        challenge: challenge,
+        rp: {
+          // These are seen by the authenticator when selecting which key to use
+          name: "WebAuthn Demo",
+          id: router.hostname,
+        },
+        user: {
+          // You can choose any id you please, as long as it is unique
+          id: base64url_encode(
+            Uint8Array.from("UZSL85T9AFC", (c) => c.charCodeAt(0))
+          ),
+          name: email,
+          displayName: email,
+        },
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" },
+          { type: "public-key", alg: -257 },
+        ],
+        timeout: 120000,
+        attestation: "direct",
+        authenticatorSelection: {
+          authenticatorAttachment: "platform",
+          residentKey: "required",
+          userVerification: "required",
+        },
       },
     });
 
+    console.log(cred.id)
+
+    var objetoSend = JSON.stringify({ email, challenge })
+
+    objetoSend.credential = 
+
     const result = await fetch("/api/login", {
       method: "POST",
-      body: JSON.stringify({ email, credential }),
+      body: {
+        ...objetoSend
+      },
       headers: {
         "Content-Type": "application/json",
       },
