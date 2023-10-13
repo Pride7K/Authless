@@ -57,10 +57,6 @@ export default function register({ challenge }) {
   const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-        
-    console.log("hostname", router.hostname)
-
-    console.log("challenge", challenge)
 
     const userAvailable = await fetch("/api/usercheck", {
       method: "POST",
@@ -78,14 +74,6 @@ export default function register({ challenge }) {
 
     var newChallenger = stringToArrayBuffer(challenge);
 
-    console.log(newChallenger);
-
-    
-    console.log("hostname", router.hostname)
-
-    const userId = Array.from(window.crypto.getRandomValues(new Uint8Array(16)))
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join("");
 
     const cred = await create({
       publicKey: {
@@ -108,9 +96,9 @@ export default function register({ challenge }) {
         timeout: 120000,
         attestation: "direct",
         authenticatorSelection: {
-          authenticatorAttachment: "platform",
-          residentKey: "required",
-          userVerification: "required",
+          authenticatorAttachment: "platform", //!!!  
+          requireResidentKey: true,            //!!!
+          userVerification: "required"         //!!!
         },
       },
     });

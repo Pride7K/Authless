@@ -21,7 +21,6 @@ export default function home({ userID }) {
 }
 
 export const getServerSideProps = withSession(async function ({ req, res }) {
-  console.log("teste")
   if (!isLoggedIn(req)) {
     return {
       redirect: {

@@ -10,13 +10,9 @@ const handler: NextApiHandler = async (request, response) => {
   try {
     await dbConnect();
 
-    console.log("entrou")
 
     const { credentialID, publicKey } = await verifyCredentials(request);
 
-    console.log("Credential ID: ", credentialID);
-
-    console.log("Public Key: ", publicKey);
 
     const cred = await credentials.create({
       name: request.body.username,
@@ -29,9 +25,11 @@ const handler: NextApiHandler = async (request, response) => {
       credentials: [cred.id],
     });
 
-    console.log("User: ", usr)
 
     request.session.userId = usr._id;
+    request.session.credentialId = credentialID;
+    request.session.publicKey = publicKey; 
+
     await request.session.save();
     response.status(200).json({ userId: usr._id });
   } catch (error: any) {

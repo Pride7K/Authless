@@ -97,8 +97,6 @@ export async function login(request: NextApiRequest) {
   const challenge = request.session.challenge ?? "";
   const credential = request.body.credential ?? "";
   const email = request.body.email ?? "";
-  
-  console.log(credential)
 
   if (credential?.id == null) {
     throw new Error("Invalid Credentials");

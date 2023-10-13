@@ -24,7 +24,6 @@ export default function Login({ challenge }) {
     const checkAvailability = async () => {
       const available =
         await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-        console.log(available && supported())
       setSupport(available && supported());
     };
 
@@ -36,21 +35,12 @@ export default function Login({ challenge }) {
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log(challenge);
-
-    console.log("hostname", router.hostname)
+   
 
     const cred = await get({
       publicKey: {
         challenge: challenge,
         rpId: "localhost",
-        allowCredentials: [
-          {
-            type: "public-key",
-            id: base64url_encode(window.crypto.getRandomValues(new Uint8Array(16))),
-            transports: [ "internal"],
-          },
-        ],
         userVerification: "required",
         timeout: 120000,
       },
