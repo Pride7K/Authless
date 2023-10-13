@@ -28,9 +28,12 @@ const handler: NextApiHandler = async (request, response) => {
       username: request.body.username,
       credentials: [cred.id],
     });
-    request.session.userId = user._id;
+
+    console.log("User: ", usr)
+
+    request.session.userId = usr._id;
     await request.session.save();
-    response.status(200).json({ userId: user._id });
+    response.status(200).json({ userId: usr._id });
   } catch (error: any) {
     response.status(500).json({ message: error.message });
   }

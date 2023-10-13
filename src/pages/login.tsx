@@ -24,6 +24,7 @@ export default function Login({ challenge }) {
     const checkAvailability = async () => {
       const available =
         await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        console.log(available && supported())
       setSupport(available && supported());
     };
 
@@ -37,47 +38,31 @@ export default function Login({ challenge }) {
 
     console.log(challenge);
 
-    const cred = await create({
+    console.log("hostname", router.hostname)
+
+    const cred = await get({
       publicKey: {
         challenge: challenge,
-        rp: {
-          // These are seen by the authenticator when selecting which key to use
-          name: "WebAuthn Demo",
-          id: router.hostname,
-        },
-        user: {
-          // You can choose any id you please, as long as it is unique
-          id: base64url_encode(
-            Uint8Array.from("UZSL85T9AFC", (c) => c.charCodeAt(0))
-          ),
-          name: email,
-          displayName: email,
-        },
-        pubKeyCredParams: [
-          { alg: -7, type: "public-key" },
-          { type: "public-key", alg: -257 },
+        rpId: "localhost",
+        allowCredentials: [
+          {
+            type: "public-key",
+            id: base64url_encode(window.crypto.getRandomValues(new Uint8Array(16))),
+            transports: [ "internal"],
+          },
         ],
+        userVerification: "required",
         timeout: 120000,
-        attestation: "direct",
-        authenticatorSelection: {
-          authenticatorAttachment: "platform",
-          residentKey: "required",
-          userVerification: "required",
-        },
       },
     });
 
     console.log(cred.id)
 
-    var objetoSend = JSON.stringify({ email, challenge })
-
-    objetoSend.credential = 
+    console.log("credId", cred.id )
 
     const result = await fetch("/api/login", {
       method: "POST",
-      body: {
-        ...objetoSend
-      },
+      body: JSON.stringify({ email, challenge, credential: cred }),
       headers: {
         "Content-Type": "application/json",
       },

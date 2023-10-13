@@ -57,6 +57,11 @@ export default function register({ challenge }) {
   const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+        
+    console.log("hostname", router.hostname)
+
+    console.log("challenge", challenge)
+
     const userAvailable = await fetch("/api/usercheck", {
       method: "POST",
       headers: {
@@ -75,6 +80,9 @@ export default function register({ challenge }) {
 
     console.log(newChallenger);
 
+    
+    console.log("hostname", router.hostname)
+
     const userId = Array.from(window.crypto.getRandomValues(new Uint8Array(16)))
       .map((byte) => byte.toString(16).padStart(2, "0"))
       .join("");
@@ -85,13 +93,11 @@ export default function register({ challenge }) {
         rp: {
           // These are seen by the authenticator when selecting which key to use
           name: "WebAuthn Demo",
-          id: router.hostname,
+          id: "localhost",
         },
         user: {
           // You can choose any id you please, as long as it is unique
-          id: base64url_encode(
-            Uint8Array.from("UZSL85T9AFC", (c) => c.charCodeAt(0))
-          ),
+          id: base64url_encode(window.crypto.getRandomValues(new Uint8Array(16))),
           name: username,
           displayName: email,
         },
@@ -108,6 +114,8 @@ export default function register({ challenge }) {
         },
       },
     });
+
+    console.log("challenge", challenge)
 
     console.log(cred.id);
 
