@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Important Info
 
-## Getting Started
+## What is UVRA (User-Verifying Roaming Authenticators) ?
 
-First, run the development server:
+UVRA (User-Verifying Roaming Authenticators) are a type of authentication method that verifies the identity of a user while they are on the move. It involves using a physical device, such as a smartphone or a security key, to authenticate the user's identity and grant access to protected systems or resources. UVRA provides an additional layer of security by verifying the user's presence and location during the authentication process.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Related Links
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. [Navigation Credentials Get Method](https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/get)
+2. [What is Fido?](https://www.techtarget.com/searchsecurity/definition/FIDO-Fast-Identity-Online)
+3. [How to FIDO](https://fido-alliance.github.io/how-to-fido/HowToFIDO.html#5-user-verifying-roaming-authenticators-uvras)
+4. [Webauthn Examples](https://wicg.github.io/web-otp/)
+5. [Webauthn W3 Documentation](https://www.w3.org/TR/webauthn/#credential-dictionary)
+6. [Info about the Webauthn API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API)
+7. [How to implement the FIDO Auth with NextJs and MongoDB](https://medium.com/@vachanmn123/implementing-webauthn-passkeys-on-next-js-baa36ecd59cb)
+8. [FIDO, FIDO2, WEBAUTHN, CTAP, CTAP2](https://medium.com/webauthnworks/introduction-to-webauthn-api-5fd1fb46c285)
+9. [WebAuthn Explained](https://fusionauth.io/articles/authentication/webauthn-explained)
+10. [Webauthn Overview](https://curity.io/resources/learn/webauthn-overview/)
+11. [Webauthn API](https://developers.yubico.com/WebAuthn/WebAuthn_Developer_Guide/WebAuthn_Client_Authentication.html)
+12. [Webauthn JSON API](https://stytch.com/docs/guides/webauthn/api)
